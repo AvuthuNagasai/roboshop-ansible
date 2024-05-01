@@ -1,38 +1,67 @@
-- name: Installing Nginx Server
-  ansible.builtin.yum:
-    name: nginx
-    state: latest
 
-- name: Remove directory
-  ansible.builtin.file:
-    path: /usr/share/nginx/html
-    state: absent
+    - name: Installing NGINX
+      ansible.builtin.yum:
+        name: nginx
+        state: latest
+    # it's hard to remove file in ansible, we are removing directory
+    - name: remove directory
+      ansible.builtin.file:
+        path: /usr/share/nginx/html/
+        state: absent
 
-- name: Create directory
-  ansible.builtin.file:
-    path: /usr/share/nginx/html
-    state: directory
+    - name: create directory
+      ansible.builtin.file:
+        path: /usr/share/nginx/html/
+        state: directory
 
-- name: Download and extract frontend content
-  ansible.builtin.unarchive:
-    src: https://roboshop-artifacts.s3.amazonaws.com/frontend.zip
-    dest: /usr/share/nginx/html
-    remote_src: yes
+    - name: download and extract frontend content
+      ansible.builtin.unarchive:
+        src: https://roboshop-artifacts.s3.amazonaws.com/frontend.zip
+        dest: /usr/share/nginx/html/
+        remote_src: yes
+    - name: copy roboshop config file
+      ansible.builtin.copy:
+        src: roboshop.conf
+        dest: /etc/nginx/default.d/roboshop.conf
 
-- name: Copy nginx configuration
-  ansible.builtin.template:
-    src: nginx.conf
-    dest: /etc/nginx/nginx.conf
+    - name: Enable service httpd, and not touch the state
+      ansible.builtin.service:
+        name: nginx
+        enabled: yes
 
-- name: Copy roboshop configuration
-  ansible.builtin.template:
-    src: roboshop.conf
-    dest: /etc/nginx/default.d/roboshop.conf
-
-- name: Start Nginx Service
-  ansible.builtin.systemd:
-    state: restarted
-    name: nginx
-    enabled: true
+    - name: Start nginx service
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
 
 
+
+
+
+
+
+
+
+
+
+
+
+#echo -e "\e[31m Installing NGINX \e[0m"
+#yum install nginx -y &>>/tmp/roboshop.log
+#
+#echo -e "\e[31m removing old app content\e[0m"
+#rm -rf /usr/share/nginx/html/* &>>/tmp/roboshop.log
+#
+#echo -e "\e[32m download frontend content\e[0m"
+#curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend.zip &>>/tmp/roboshop.log
+#
+#echo -e "\e[31m extracting frontend content\e[0m"
+#cd /usr/share/nginx/html
+#unzip /tmp/frontend.zip &>>/tmp/roboshop.log
+#
+### we need to copy config file
+#cp /root/roboshop-shell/roboshop.conf /etc/nginx/default.d/roboshop.conf
+#
+#echo -e "\e[31m starting NGINX server\e[0m"
+#systemctl enable nginx
+#systemctl start nginx
