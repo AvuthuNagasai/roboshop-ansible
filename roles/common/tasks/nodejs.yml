@@ -5,7 +5,25 @@
   ansible.builtin.yum:
     name: nodejs
     state: installed
-
+#  nodejs() {
+#
+#  echo -e "${color} enabling nodejs version 18 ${nocolor}"
+#  dnf module disable nodejs -y &>>log_file
+#  dnf module enable nodejs:18 -y &>>log_file
+#  stat_check $?
+#  echo -e "${color} installing nodejs ${nocolor}"
+#  dnf install nodejs -y &>>log_file
+#  stat_check $?
+#  app_presetup
+#
+#  echo -e "${color} download the dependencies ${nocolor}"
+#  cd ${app_path} &>>log_file
+#  npm install &>>log_file
+#  stat_check $?
+#  systemd_setup
+#  stat_check $?
+#
+#}
 
 
 
