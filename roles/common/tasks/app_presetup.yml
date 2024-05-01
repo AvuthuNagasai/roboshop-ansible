@@ -19,6 +19,15 @@
     remote_src: yes
 
 
+- name: Download and extract app content
+  ansible.builtin.unarchive:
+    src: https://roboshop-artifacts.s3.amazonaws.com/{{ component }}.zip
+    dest: /app
+    remote_src: yes
+
+
+
+
 
 
 
