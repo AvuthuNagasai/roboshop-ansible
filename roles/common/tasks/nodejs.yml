@@ -5,6 +5,14 @@
   ansible.builtin.yum:
     name: nodejs
     state: installed
+
+
+
+- name: App Pre-requisites
+  ansible.builtin.import_tasks:
+    file: app_presetup.yml
+
+
 #  nodejs() {
 #
 #  echo -e "${color} enabling nodejs version 18 ${nocolor}"
