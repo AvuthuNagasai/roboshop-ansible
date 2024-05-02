@@ -1,0 +1,33 @@
+#  maven() {
+#    echo -e "${color} installing maven ${nocolor}"
+#
+#    dnf install maven -y &>>$log_file
+#    stat_check $?
+#    app_presetup
+#
+#    echo -e "${color} download the dependencies & build the application ${nocolor}"
+#    cd ${app_path}
+#    mvn clean package &>>$log_file
+#    mv target/${component}-1.0.jar ${component}.jar &>>$log_file
+#
+#    mysql_schema_setup
+#
+#    stat_check $?
+#    systemd_setup
+#    stat_check $?
+#  }
+
+
+- name: Install maven
+  ansible.builtin.yum:
+    name: nodejs
+    state: installed
+
+- name: Load NodeJS Dependencies
+  ansible.builtin.shell: npm install
+  args:
+    chdir: /app
+
+- name: SystemD Setup
+  ansible.builtin.import_tasks:
+    file: systemd_setup.yml
